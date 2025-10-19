@@ -1,0 +1,27 @@
+name: Webhook Receiver
+
+on:
+  workflow_dispatch:
+    inputs:
+      value:
+        description: 'Value to update'
+        required: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Write data.json
+        run: |
+          echo "{\"value\":\"${{ github.event.inputs.value }}\",\"updated_at\":\"$(date -u +'%Y-%m-%dT%H:%M:%SZ')\"}" > data.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Update variable ${{ github.event.inputs.value }}" || echo "no changes"
+          git push
