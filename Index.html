@@ -1,23 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skript Variable Viewer</title>
+  <style>
+    body {
+      font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      background-color: #0b0b0c;
+      color: #f4f4f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: #141417;
+      padding: 40px;
+      border-radius: 16px;
+      border: 1px solid #2c2c30;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    #val { font-size: 36px; font-weight: 700; margin-bottom: 10px; }
+    #time { font-size: 14px; color: #999; }
+  </style>
 </head>
-<body style="font-family:sans-serif;padding:2rem;">
-  <h1>Current Skript Variable:</h1>
-  <h2 id="val">Loading...</h2>
-  <p id="time" style="color:gray;"></p>
+<body>
+  <div class="box">
+    <h1>Current Skript Variable</h1>
+    <div id="val">Loading...</div>
+    <div id="time"></div>
+  </div>
+
   <script>
     async function load() {
-      const url = "https://gist.githubusercontent.com/AKx5x/cd788f03a1d8c9a14a2f917ab71b7f43/raw/data.json?ts=" + Date.now();
-      const res = await fetch(url, { cache: "no-store" });
-      const json = await res.json();
-      document.getElementById("val").textContent = json.value;
-      document.getElementById("time").textContent = "Updated: " + json.updated_at;
+      // Replace YOUR_USERNAME and YOUR_GIST_ID below
+      const url = "https://gist.githubusercontent.com/AKx5x/cd788f03a1d8c9a14a2f917ab71b7f43/raw/data.json?ts="
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        document.getElementById("val").textContent = json.value ?? "(null)";
+        document.getElementById("time").textContent = "Updated: " + (json.updated_at ?? "unknown");
+      } catch (e) {
+        document.getElementById("val").textContent = "Error loading value";
+        document.getElementById("time").textContent = e.message;
+      }
     }
     load();
     setInterval(load, 5000);
   </script>
 </body>
 </html>
+
+   
