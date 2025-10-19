@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Skript Variable Viewer</title>
+</head>
+<body style="font-family:sans-serif;padding:2rem;">
+  <h1>Current Skript Variable:</h1>
+  <h2 id="val">Loading...</h2>
+  <p id="time" style="color:gray;"></p>
+  <script>
+    async function load() {
+      const url = "https://gist.githubusercontent.com/AKx5x/cd788f03a1d8c9a14a2f917ab71b7f43/raw/data.json?ts=" + Date.now();
+      const res = await fetch(url, { cache: "no-store" });
+      const json = await res.json();
+      document.getElementById("val").textContent = json.value;
+      document.getElementById("time").textContent = "Updated: " + json.updated_at;
+    }
+    load();
+    setInterval(load, 5000);
+  </script>
+</body>
+</html>
